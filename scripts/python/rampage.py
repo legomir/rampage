@@ -95,19 +95,6 @@ def is_ramp_parm(parm: hou.Parm):
     return parm.parmTemplate().name() == "ramp"
 
 
-def load_preset_data() -> Dict:
-    path = Path(hou.getenv("RAMPAGE_PRESETS_PATH"))
-    if not path.exists():
-        path.parent.mkdir(parents=True)
-        path.touch()
-        path.write_text("{}")
-
-    with open(path) as file:
-        data = json.load(file)
-
-    return data
-
-
 def should_display_rampage_menu(kwargs: dict) -> bool:
     if not kwargs["parms"]:
         return False
