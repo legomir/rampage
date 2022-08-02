@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menuDocument>
+    <menu>
+        <subMenu id="rampage">
+            <label>Rampage</label>
+            <context>
+                <expression>
+                    <![CDATA[
+from rampage import should_display_rampage_menu
+
+return should_display_rampage_menu(kwargs)
+]]>
+                </expression>
+            </context>
+            <scriptItem id="rampage.add_preset">
+                <label>Add preset to rampage</label>
+                <scriptCode>
+                    <![CDATA[
+from rampage import add_ramp_preset_menu_callback
+
+add_ramp_preset_menu_callback(kwargs)
+]]>
+                </scriptCode>
+            </scriptItem>
+            <subMenu id="rampage.presets">
+                <label>Presets</label>
+                <scriptMenuStripDynamic id="rampage.preset_strip">
+                    <contentsScriptCode>
+                        <![CDATA[
+from rampage import create_menu_strip
+
+return create_menu_strip(kwargs)
+]]>
+                    </contentsScriptCode>
+                    <scriptCode>
+                        <![CDATA[
+print(kwargs)
+]]>
+                    </scriptCode>
+                </scriptMenuStripDynamic>
+            </subMenu>
+        </subMenu>
+    </menu>
+</menuDocument>
