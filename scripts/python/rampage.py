@@ -95,6 +95,11 @@ def is_ramp_parm(parm: hou.Parm):
     return parm.parmTemplate().name() == "ramp"
 
 
+#######################################################################################
+# Menu related functions
+#######################################################################################
+
+
 def should_display_rampage_menu(kwargs: dict) -> bool:
     if not kwargs["parms"]:
         return False
