@@ -72,7 +72,7 @@ class RampPreset:
         return cls(name, ramp_type, basis, ramp.keys(), ramp.values())
 
     def to_ramp(self) -> hou.Ramp:
-        ramp_basis = _convert_str_to_ramp_basis(self.basis)
+        ramp_basis = tuple(_convert_str_to_ramp_basis(base) for base in self.basis)
         return hou.Ramp(ramp_basis, self.keys, self.values)
 
 
