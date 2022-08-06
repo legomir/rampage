@@ -195,3 +195,23 @@ def _read_preset_file(filepath: str):
     with open(filepath) as file:
         data = json.load(file)
     return data
+
+
+def set_ramp_parm_from_chosen_ramp_preset(kwargs) -> None:
+    parm = kwargs["parms"][0]
+    token = kwargs["selectedtoken"]
+    ramp_type = _get_ramp_type(parm)
+    preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
+    preset_list = _read_preset_file(preset_file_path)
+
+    preset_for_parm = None
+    for preset in preset_list:
+        if preset["name"] == token:
+            preset_for_parm = preset
+            break
+
+    if not preset_for_parm:
+        return
+
+    ramp_preset = RampPreset.from_dict(preset_for_parm)
+    parm.set(ramp_preset.to_ramp())
