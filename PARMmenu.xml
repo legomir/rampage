@@ -34,7 +34,9 @@ return create_menu_strip(kwargs)
                     </contentsScriptCode>
                     <scriptCode>
                         <![CDATA[
-print(kwargs)
+from rampage import set_ramp_parm_from_chosen_ramp_preset
+
+set_ramp_parm_from_chosen_ramp_preset(kwargs)
 ]]>
                     </scriptCode>
                 </scriptMenuStripDynamic>
