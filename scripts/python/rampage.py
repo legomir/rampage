@@ -7,7 +7,6 @@ import hou
 
 from enum import Enum, unique
 from functools import lru_cache
-from pathlib import Path
 from typing import Optional, Tuple, Dict, Union, List
 
 
