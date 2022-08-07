@@ -91,7 +91,7 @@ def _convert_str_to_ramp_basis(basis_str: str):
 
 
 def is_ramp_parm(parm: hou.Parm):
-    return parm.parmTemplate().name() == "ramp"
+    return parm.parmTemplate().type() == hou.parmTemplateType.Ramp
 
 
 #######################################################################################
@@ -127,19 +127,19 @@ def add_ramp_preset_menu_callback(kwargs: dict) -> None:
 
 def _add_ramp_preset_to_presets_file(parm: hou.Parm, name: str):
     preset = RampPreset.from_parm(parm, name)
+    preset_key = hou.text.encodeParm(name.lower())
     ramp_type = _get_ramp_type(parm)
     preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
-    preset_list = _read_preset_file(preset_file_path)
+    presets_data = _read_preset_file(preset_file_path)
 
-    preset_names = tuple(preset["name"] for preset in preset_list)
-    if name in preset_names:
+    if preset_key in presets_data:
         raise ValueError(f"Name {name} already exists in presets file")
 
-    preset_list.append(preset.to_dict())
+    presets_data[preset_key] = preset.to_dict()
 
     temp_preset_file_path = preset_file_path + "." + _create_random_end_str(7)
     with open(temp_preset_file_path, "w") as file:
-        json.dump(preset_list, file, indent=4)
+        json.dump(presets_data, file, indent=4)
 
     os.replace(temp_preset_file_path, preset_file_path)
     _read_preset_file.cache_clear()
@@ -168,13 +168,12 @@ def create_menu_strip(kwargs: dict) -> List[str]:
     ramp_type = _get_ramp_type(parm)
 
     preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
-    presets = _read_preset_file(preset_file_path)
+    preset_dict = _read_preset_file(preset_file_path)
 
     items = []
-    for preset in presets:
-        name = preset["name"]
-        parm_name = hou.text.encodeParm(name)
-        items.append(parm_name)
+    for key in preset_dict:
+        name = preset_dict[key]["name"]
+        items.append(key)
         items.append(name)
 
     return items
@@ -202,16 +201,11 @@ def set_ramp_parm_from_chosen_ramp_preset(kwargs) -> None:
     token = kwargs["selectedtoken"]
     ramp_type = _get_ramp_type(parm)
     preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
-    preset_list = _read_preset_file(preset_file_path)
+    preset_dict = _read_preset_file(preset_file_path)
 
-    preset_for_parm = None
-    for preset in preset_list:
-        if preset["name"] == token:
-            preset_for_parm = preset
-            break
-
-    if not preset_for_parm:
+    preset = preset_dict.get(token, None)
+    if preset is None:
         return
 
-    ramp_preset = RampPreset.from_dict(preset_for_parm)
+    ramp_preset = RampPreset.from_dict(preset)
     parm.set(ramp_preset.to_ramp())
