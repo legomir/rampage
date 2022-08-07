@@ -22,6 +22,26 @@ add_ramp_preset_menu_callback(kwargs)
 ]]>
                 </scriptCode>
             </scriptItem>
+            <scriptItem id="rampage.replace_preset">
+                <label>Overrite rampage preset</label>
+                <scriptCode>
+                    <![CDATA[
+from rampage import replace_preset
+
+replace_preset(kwargs)
+]]>
+                </scriptCode>
+            </scriptItem>
+            <scriptItem id="rampage.remove_preset">
+                <label>Remove rampage preset</label>
+                <scriptCode>
+                    <![CDATA[
+from rampage import remove_preset
+
+remove_preset(kwargs)
+]]>
+                </scriptCode>
+            </scriptItem>
             <subMenu id="rampage.presets">
                 <label>Presets</label>
                 <scriptMenuStripDynamic id="rampage.preset_strip">

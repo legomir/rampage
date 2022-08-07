@@ -127,7 +127,7 @@ def add_ramp_preset_menu_callback(kwargs: dict) -> None:
 
 def _add_ramp_preset_to_presets_file(parm: hou.Parm, name: str):
     preset = RampPreset.from_parm(parm, name)
-    preset_key = hou.text.encodeParm(name.lower())
+    preset_key = hou.text.alphaNumeric(name.lower())
     ramp_type = _get_ramp_type(parm)
     preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
     presets_data = _read_preset_file(preset_file_path)
@@ -137,12 +137,7 @@ def _add_ramp_preset_to_presets_file(parm: hou.Parm, name: str):
 
     presets_data[preset_key] = preset.to_dict()
 
-    temp_preset_file_path = preset_file_path + "." + _create_random_end_str(7)
-    with open(temp_preset_file_path, "w") as file:
-        json.dump(presets_data, file, indent=4)
-
-    os.replace(temp_preset_file_path, preset_file_path)
-    _read_preset_file.cache_clear()
+    _safe_save_preset_file(preset_file_path, presets_data)
 
 
 def _create_random_end_str(num_of_chars: int):
@@ -179,6 +174,77 @@ def create_menu_strip(kwargs: dict) -> List[str]:
     return items
 
 
+def set_ramp_parm_from_chosen_ramp_preset(kwargs) -> None:
+    parm = kwargs["parms"][0]
+    token = kwargs["selectedtoken"]
+    ramp_type = _get_ramp_type(parm)
+    preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
+    preset_dict = _read_preset_file(preset_file_path)
+
+    preset = preset_dict.get(token, None)
+    if preset is None:
+        return
+
+    ramp_preset = RampPreset.from_dict(preset)
+    parm.set(ramp_preset.to_ramp())
+
+
+def replace_preset(kwargs) -> None:
+    parm = kwargs["parms"][0]
+    ramp_type = _get_ramp_type(parm)
+    preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
+    preset_dict = _read_preset_file(preset_file_path)
+
+    key = _user_choice_selection_from_preset_list(preset_dict)
+    if not key:
+        return
+
+    preset = RampPreset.from_parm(parm, preset_dict[key]["name"])
+    preset_dict[key] = preset.to_dict()
+
+    _safe_save_preset_file(preset_file_path, preset_dict)
+
+
+def remove_preset(kwargs) -> None:
+    parm = kwargs["parms"][0]
+    ramp_type = _get_ramp_type(parm)
+    preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
+    preset_dict = _read_preset_file(preset_file_path)
+
+    key = _user_choice_selection_from_preset_list(preset_dict)
+    if not key:
+        return
+
+    del preset_dict[key]
+    _safe_save_preset_file(preset_file_path, preset_dict)
+
+
+def _user_choice_selection_from_preset_list(preset_data: dict) -> Optional[str]:
+    preset_names = tuple(preset["name"] for preset in preset_data.values())
+    choices = hou.ui.selectFromList(
+        preset_names,
+        message="Select preset to replace",
+        exclusive=True,
+        column_header="Presets",
+        clear_on_cancel=True,
+    )
+
+    if len(choices) == 0:
+        return
+
+    key = list(preset_data.keys())[choices[0]]
+    return key
+
+
+def _safe_save_preset_file(preset_file_path, presets_data):
+    temp_preset_file_path = preset_file_path + "." + _create_random_end_str(7)
+    with open(temp_preset_file_path, "w") as file:
+        json.dump(presets_data, file, indent=4)
+
+    os.replace(temp_preset_file_path, preset_file_path)
+    _read_preset_file.cache_clear()
+
+
 def _get_preset_file_path_from_ramp_type(ramp_type) -> str:
     rampage_preset_dir = os.environ["RAMPAGE_PRESETS_PATH"]
     if ramp_type == hou.rampParmType.Color:
@@ -194,18 +260,3 @@ def _read_preset_file(filepath: str):
     with open(filepath) as file:
         data = json.load(file)
     return data
-
-
-def set_ramp_parm_from_chosen_ramp_preset(kwargs) -> None:
-    parm = kwargs["parms"][0]
-    token = kwargs["selectedtoken"]
-    ramp_type = _get_ramp_type(parm)
-    preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
-    preset_dict = _read_preset_file(preset_file_path)
-
-    preset = preset_dict.get(token, None)
-    if preset is None:
-        return
-
-    ramp_preset = RampPreset.from_dict(preset)
-    parm.set(ramp_preset.to_ramp())
