@@ -195,7 +195,9 @@ def replace_preset(kwargs) -> None:
     preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
     preset_dict = _read_preset_file(preset_file_path)
 
-    key = _user_choice_selection_from_preset_list(preset_dict)
+    key = _user_choice_selection_from_preset_list(
+        preset_dict, "Select preset to replace"
+    )
     if not key:
         return
 
@@ -211,7 +213,9 @@ def remove_preset(kwargs) -> None:
     preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
     preset_dict = _read_preset_file(preset_file_path)
 
-    key = _user_choice_selection_from_preset_list(preset_dict)
+    key = _user_choice_selection_from_preset_list(
+        preset_dict, "Select preset to remove"
+    )
     if not key:
         return
 
@@ -219,11 +223,13 @@ def remove_preset(kwargs) -> None:
     _safe_save_preset_file(preset_file_path, preset_dict)
 
 
-def _user_choice_selection_from_preset_list(preset_data: dict) -> Optional[str]:
+def _user_choice_selection_from_preset_list(
+    preset_data: dict, message: Optional[str]
+) -> Optional[str]:
     preset_names = tuple(preset["name"] for preset in preset_data.values())
     choices = hou.ui.selectFromList(
         preset_names,
-        message="Select preset to replace",
+        message=message,
         exclusive=True,
         column_header="Presets",
         clear_on_cancel=True,
