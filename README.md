@@ -4,7 +4,7 @@
 Rampage is utility for __Sidefx Houdini__ meant to help with managing user made presets for ramp
 parameters. Houdini have some build in preset for ramps:
 ![Default ramp preset](/docs/images/build_in_ramp_presets.png)
-However editing this list by user is quite hard. Menu can be edited by adding package/user directory file called __File name here__. Those files have quite abstract syntax and any to see changed restart of Houdini is required. The goal of __Rampage__ is to simplify this process by providing simple way of creating and managing preset for ramp parameters.
+However editing this list by user is quite hard. Menu can be edited by adding package/user directory one file called __float.ramp__ or __color.ramp__. Those files have syntax similar to json but to see any changes restart of Houdini is required. The goal of __Rampage__ is to simplify this process by providing simple way of creating and managing preset for ramp parameters.
 
 Both __color__ and __float__ ramps are supported.
 
