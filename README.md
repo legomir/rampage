@@ -28,5 +28,15 @@ Show list of existing presets and let choose which one should be removed:
 Let you choose from list of existing presets for given type of ramp.
 
 ![Rampage presets submenu](docs/images/presets_submenu.png)
+## Implementations details:
+### Package file
+__Rampage__ is implemented with [Houdini packages](https://www.sidefx.com/docs/houdini/ref/plugins.html) in mind. That allow ease of installation and defining variables.
+Variables defined by __Rampage__:
+- _$RAMPAGE_PATH_ : path to rampage directory
+- _$RAMPAGE_PRESETS_PATH_ : path to directory that contains presets
+### Preset files
+Presets are stored in _%RAMPAGE_PRESETS_PATH_ as json files. __color.json__ for color ramp and __float.json__ for float ramp. Currently there is no way to concatenate preset files in multiple locations.
 ## Requirements
 __Houdini__ - __Python 3__ version(most of functions is typed)
+## Contributors
+- Paweł Bernaciak
