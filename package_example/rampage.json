@@ -1,0 +1,13 @@
+{
+    "path": "$RAMPAGE_PATH",
+    "load_package_once": true,
+    "version": "1.0.0",
+    "env": [
+        {
+            "RAMPAGE_PATH": "$HOME/dev/houdini_packages/rampage"
+        },
+        {
+            "RAMPAGE_PRESETS_PATH": "$RAMPAGE_PATH/presets/"
+        }
+    ]
+}
