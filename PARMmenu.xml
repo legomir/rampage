@@ -23,7 +23,7 @@ add_ramp_preset_menu_callback(kwargs)
                 </scriptCode>
             </scriptItem>
             <scriptItem id="rampage.replace_preset">
-                <label>Overrite rampage preset</label>
+                <label>Ovewrite rampage preset</label>
                 <scriptCode>
                     <![CDATA[
 from rampage import replace_preset
