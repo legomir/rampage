@@ -363,6 +363,18 @@ def set_ramp_parm_from_chosen_ramp_preset(kwargs: dict) -> None:
     parm.set(ramp_preset.to_ramp())
 
 
+def rename_ramp_preset(old_name: str, new_name: str, preset_dict: dict) -> dict:
+    if old_name not in preset_dict:
+        return None
+
+    preset = preset_dict.pop(old_name)
+    preset["name"] = new_name
+    key_name = hou.text.alphaNumeric(new_name.lower())
+    preset_dict[key_name]
+
+    return preset_dict
+
+
 def _safe_save_preset_file(preset_file_path: str, presets_data: dict):
     """Save modified preset file in safe way and clear read cache. At first
     preset file is saved as the same name with random characters on the end
