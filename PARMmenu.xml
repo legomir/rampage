@@ -6,7 +6,7 @@
             <context>
                 <expression>
                     <![CDATA[
-from rampage import should_display_rampage_menu
+from rampage.rampage import should_display_rampage_menu
 
 return should_display_rampage_menu(kwargs)
 ]]>
@@ -16,7 +16,7 @@ return should_display_rampage_menu(kwargs)
                 <label>Add preset to rampage</label>
                 <scriptCode>
                     <![CDATA[
-from rampage import add_ramp_preset_menu_callback
+from rampage.rampage import add_ramp_preset_menu_callback
 
 add_ramp_preset_menu_callback(kwargs)
 ]]>
@@ -26,7 +26,7 @@ add_ramp_preset_menu_callback(kwargs)
                 <label>Ovewrite rampage preset</label>
                 <scriptCode>
                     <![CDATA[
-from rampage import replace_preset
+from rampage.rampage import replace_preset
 
 replace_preset(kwargs)
 ]]>
@@ -36,7 +36,7 @@ replace_preset(kwargs)
                 <label>Remove rampage preset</label>
                 <scriptCode>
                     <![CDATA[
-from rampage import remove_preset
+from rampage.rampage import remove_preset
 
 remove_preset(kwargs)
 ]]>
@@ -47,14 +47,14 @@ remove_preset(kwargs)
                 <scriptMenuStripDynamic id="rampage.preset_strip">
                     <contentsScriptCode>
                         <![CDATA[
-from rampage import create_menu_strip
+from rampage.rampage import create_menu_strip
 
 return create_menu_strip(kwargs)
 ]]>
                     </contentsScriptCode>
                     <scriptCode>
                         <![CDATA[
-from rampage import set_ramp_parm_from_chosen_ramp_preset
+from rampage.rampage import set_ramp_parm_from_chosen_ramp_preset
 
 set_ramp_parm_from_chosen_ramp_preset(kwargs)
 ]]>
