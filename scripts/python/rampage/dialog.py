@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from PySide2 import QtCore
 from PySide2.QtWidgets import (
@@ -24,8 +24,14 @@ def show_rename_dialog(menu_labels: List[str], menu_items: List[str]):
 
 
 class RenameDialog(QDialog):
-    def __init__(self, menu_labels: List[str], menu_items: List[str]) -> None:
-        super().__init__()
+    def __init__(
+        self,
+        menu_labels: List[str],
+        menu_items: List[str],
+        parent: Optional[QWidget] = None,
+    ) -> None:
+        super().__init__(parent)
+
         self.setWindowTitle("Rampage - Rename ramp")
         self.layout = QVBoxLayout()
 
