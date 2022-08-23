@@ -21,6 +21,15 @@ old_preset_name = str
 def show_rename_dialog(
     menu_labels: List[str], menu_items: List[str]
 ) -> Optional[Tuple[old_preset_name, new_preset_name]]:
+    """Show rename dialog and returns data base on user input.
+
+    Args:
+        menu_labels (List[str]): combo box labels
+        menu_items (List[str]): combo box items
+
+    Returns:
+        Optional[Tuple[old_preset_name, new_preset_name]]: data from dialog
+    """
     dialog = RenameDialog(menu_labels, menu_items, parent=hou.qt.mainWindow())
     result = dialog.exec_()
 
@@ -74,10 +83,19 @@ class RenameDialog(QDialog):
         return combo_box
 
     def showEvent(self, event: QShowEvent) -> None:
+        # We don't want user to be able to resize height of the window
+        # after windows is created, we cannot do it on initialization
+        # so we hijack show event. Dialogs are modal so call this
+        # event only once
         result = super().showEvent(event)
         self.setMaximumHeight(self.height())
         return result
 
     @property
     def result(self) -> Tuple[old_preset_name, new_preset_name]:
+        """Output data of dialog
+
+        Returns:
+            Tuple[old_preset_name, new_preset_name]
+        """
         return self._combo_box.currentData(), self._input.text()

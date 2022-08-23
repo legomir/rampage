@@ -366,6 +366,11 @@ def set_ramp_parm_from_chosen_ramp_preset(kwargs: dict) -> None:
 
 
 def rename_preset_menu_callback(kwargs: dict) -> None:
+    """Callback called from PARMmenu.xml to rename ramp preset.
+
+    Args:
+        kwargs (dict): PARMmenu kwargs
+    """
     parm = kwargs["parms"][0]
     ramp_type = _get_ramp_type(parm)
     preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
@@ -388,6 +393,17 @@ def rename_preset_menu_callback(kwargs: dict) -> None:
 
 
 def rename_ramp_preset(old_name: str, new_name: str, preset_dict: dict) -> dict:
+    """Rename ramp preset from preset dict. Same data will be save but
+    with different name.
+
+    Args:
+        old_name (str): old name of preset
+        new_name (str): new name of preset
+        preset_dict (dict): dict that have all of preset data
+
+    Returns:
+        dict: modified preset dict containing old version of data
+    """
     if old_name not in preset_dict:
         return None
 
