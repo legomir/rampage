@@ -9,6 +9,8 @@ from enum import Enum, unique
 from functools import lru_cache
 from typing import Optional, Tuple, Dict, Union, List
 
+from . import dialog
+
 
 @unique
 class RampType(Enum):
@@ -363,6 +365,28 @@ def set_ramp_parm_from_chosen_ramp_preset(kwargs: dict) -> None:
     parm.set(ramp_preset.to_ramp())
 
 
+def rename_preset_menu_callback(kwargs: dict) -> None:
+    parm = kwargs["parms"][0]
+    ramp_type = _get_ramp_type(parm)
+    preset_file_path = _get_preset_file_path_from_ramp_type(ramp_type)
+    preset_dict = _read_preset_file(preset_file_path)
+
+    menu_labels: List[str] = []
+    menu_items: List[str] = []
+    for key in preset_dict:
+        label = preset_dict[key]["name"]
+        menu_items.append(key)
+        menu_labels.append(label)
+
+    result = dialog.show_rename_dialog(menu_labels, menu_items)
+    if not result:
+        return
+
+    old_menu_name, new_menu_name = result
+    new_preset_dict = rename_ramp_preset(old_menu_name, new_menu_name, preset_dict)
+    _safe_save_preset_file(preset_file_path, new_preset_dict)
+
+
 def rename_ramp_preset(old_name: str, new_name: str, preset_dict: dict) -> dict:
     if old_name not in preset_dict:
         return None
@@ -370,7 +394,7 @@ def rename_ramp_preset(old_name: str, new_name: str, preset_dict: dict) -> dict:
     preset = preset_dict.pop(old_name)
     preset["name"] = new_name
     key_name = hou.text.alphaNumeric(new_name.lower())
-    preset_dict[key_name]
+    preset_dict[key_name] = preset
 
     return preset_dict
 

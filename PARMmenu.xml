@@ -32,6 +32,16 @@ replace_preset(kwargs)
 ]]>
                 </scriptCode>
             </scriptItem>
+            <scriptItem id="rampage.rename_preset">
+                <label>Rename rampage preset</label>
+                <scriptCode>
+                    <![CDATA[
+from rampage.rampage import rename_preset_menu_callback
+
+rename_preset_menu_callback(kwargs)
+]]>
+                </scriptCode>
+            </scriptItem>
             <scriptItem id="rampage.remove_preset">
                 <label>Remove rampage preset</label>
                 <scriptCode>
