@@ -33,7 +33,7 @@ def show_rename_dialog(
     dialog = RenameDialog(menu_labels, menu_items, parent=hou.qt.mainWindow())
     result = dialog.exec_()
 
-    if result:
+    if result[1]:
         return dialog.result
 
     return None
