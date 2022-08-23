@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from PySide2 import QtCore
+from PySide2.QtGui import QShowEvent
 from PySide2.QtWidgets import (
     QComboBox,
     QDialog,
@@ -16,11 +17,8 @@ import hou
 
 
 def show_rename_dialog(menu_labels: List[str], menu_items: List[str]):
-    dialog = RenameDialog(menu_labels, menu_items)
-    dialog.setParent(hou.qt.mainWindow(), QtCore.Qt.Window)
-    dialog.show()
-    height = dialog.height()
-    dialog.setMaximumHeight(height)
+    dialog = RenameDialog(menu_labels, menu_items, parent=hou.qt.mainWindow())
+    dialog.exec_()
 
 
 class RenameDialog(QDialog):
@@ -64,3 +62,8 @@ class RenameDialog(QDialog):
             combo_box.addItem(label, userData=item)
 
         return combo_box
+
+    def showEvent(self, event: QShowEvent) -> None:
+        result = super().showEvent(event)
+        self.setMaximumHeight(self.height())
+        return result
