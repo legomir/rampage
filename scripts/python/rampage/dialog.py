@@ -33,21 +33,22 @@ class RenameDialog(QDialog):
         self.setWindowTitle("Rampage - Rename ramp")
         self.layout = QVBoxLayout()
 
-        standard_buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        self.layout.addWidget(QLabel("Choose ramp preset from menu and type new name."))
+
+        self._combo_box = self._create_combo_box(menu_labels, menu_items)
+        self._add_field("Preset name:", self._combo_box)
+        self._input = QLineEdit()
+        self._add_field("New preset name:", self._input)
+
+        standard_buttons = QDialogButtonBox.Apply | QDialogButtonBox.Cancel
         self.button_box = QDialogButtonBox(standard_buttons)
         self.button_box.accepted.connect(self.accept)
         self.button_box.rejected.connect(self.reject)
-
-        combo_box = self._create_combo_box(menu_labels, menu_items)
-        self.add_field("Preset name:", combo_box)
-        self.add_field("New preset name:", QLineEdit())
         self.layout.addWidget(self.button_box)
-        self.layout.addStretch(1)
 
         self.setLayout(self.layout)
-        print(self.size())
 
-    def add_field(self, label: str, widget: QWidget):
+    def _add_field(self, label: str, widget: QWidget):
         layout = QHBoxLayout()
         layout.addWidget(QLabel(label))
         layout.addStretch()
