@@ -214,6 +214,9 @@ def add_ramp_preset_menu_callback(kwargs: dict) -> None:
     if choice == -1:
         return
 
+    if not name:
+        return
+
     _add_ramp_preset_to_presets_file(kwargs["parms"][0], name)
 
 
