@@ -1,6 +1,5 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
-from PySide2 import QtCore
 from PySide2.QtGui import QShowEvent
 from PySide2.QtWidgets import (
     QComboBox,
@@ -15,10 +14,20 @@ from PySide2.QtWidgets import (
 
 import hou
 
+new_preset_name = str
+old_preset_name = str
 
-def show_rename_dialog(menu_labels: List[str], menu_items: List[str]):
+
+def show_rename_dialog(
+    menu_labels: List[str], menu_items: List[str]
+) -> Optional[Tuple[old_preset_name, new_preset_name]]:
     dialog = RenameDialog(menu_labels, menu_items, parent=hou.qt.mainWindow())
-    dialog.exec_()
+    result = dialog.exec_()
+
+    if result:
+        return dialog.result
+
+    return None
 
 
 class RenameDialog(QDialog):
@@ -40,7 +49,7 @@ class RenameDialog(QDialog):
         self._input = QLineEdit()
         self._add_field("New preset name:", self._input)
 
-        standard_buttons = QDialogButtonBox.Apply | QDialogButtonBox.Cancel
+        standard_buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.button_box = QDialogButtonBox(standard_buttons)
         self.button_box.accepted.connect(self.accept)
         self.button_box.rejected.connect(self.reject)
@@ -68,3 +77,7 @@ class RenameDialog(QDialog):
         result = super().showEvent(event)
         self.setMaximumHeight(self.height())
         return result
+
+    @property
+    def result(self) -> Tuple[old_preset_name, new_preset_name]:
+        return self._combo_box.currentData(), self._input.text()
